@@ -1,5 +1,6 @@
 "use client"
 import React, { useState } from 'react';
+import TaskCard from './TaskCard';
 import Task from '../types/Task';
 
 const initialTasks: Task[] = [
@@ -19,7 +20,7 @@ const TasksList: React.FC<TasksListProps> = () => {
         <h2>To Do</h2>
         <ul>
           {notCompletedTasks.map((task) => (
-            <li key={task.id}>{task.title}</li>
+            <TaskCard key={task.id} task={task} />
           ))}
         </ul>
       </div>
@@ -27,9 +28,7 @@ const TasksList: React.FC<TasksListProps> = () => {
         <h2>Done</h2>
         <ul>
           {completedTasks.map((task) => (
-            <li key={task.id} style={{ color: 'gray' }}>
-              {task.title}
-            </li>
+            <TaskCard key={task.id} task={task} />
           ))}
         </ul>
       </div>
