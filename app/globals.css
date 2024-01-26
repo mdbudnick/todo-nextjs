@@ -3,28 +3,28 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --background-top-left: 173, 216, 230; /* Light Sky Blue */
+  --background-middle: 255, 255, 255; /* White */
+  --background-bottom-right: 144, 238, 144; /* Light Seafoam Green */
 }
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: light) {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --background-top-left: 0, 0, 0; /* Dark Background Color */
+    --background-middle: 0, 0, 0;
+    --background-bottom-right: 0, 0, 0;
   }
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
   background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+    to bottom right,
+    rgb(var(--background-top-left)),
+    rgb(var(--background-middle)),
+    rgb(var(--background-bottom-right))
+  );
 }
+
 
 @layer utilities {
   .text-balance {

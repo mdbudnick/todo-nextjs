@@ -1,6 +1,6 @@
 import React from 'react';
 import TasksList from './components/TasksList';
-import { GetServerSideProps } from 'next';
+import './globals.css';
 import Task from './types/Task';
 
 interface HomeProps {
