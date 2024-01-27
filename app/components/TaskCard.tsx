@@ -33,7 +33,7 @@ const TaskCard: React.FC<TaskProps> = ({
     : 'text-fuchsia-700'
 
   const titleInputRef = useRef<HTMLInputElement | null>(null)
-  const descriptionInputRef = useRef<HTMLInputElement | null>(null)
+  const descriptionInputRef = useRef<HTMLTextAreaElement | null>(null)
 
   useEffect(() => {
     if (isEditingTitle && titleInputRef.current) {
@@ -69,7 +69,9 @@ const TaskCard: React.FC<TaskProps> = ({
     setUpdatedTitle(e.target.value)
   }
 
-  const handleDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleDescriptionChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
     setUpdatedDescription(e.target.value)
   }
 
@@ -115,9 +117,9 @@ const TaskCard: React.FC<TaskProps> = ({
           </h2>
         )}
         {isEditingDescription ? (
-          <input
+          <textarea
             ref={descriptionInputRef}
-            type="text"
+            rows={4}
             value={updatedDescription}
             maxLength={250}
             onChange={handleDescriptionChange}

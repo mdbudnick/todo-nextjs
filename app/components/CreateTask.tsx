@@ -15,7 +15,9 @@ const CreateTask: React.FC<CreateTaskProps> = ({ onClose, onSave }) => {
     setError('')
   }
 
-  const handleDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleDescriptionChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
     setDescription(e.target.value)
     setError('')
   }
@@ -68,12 +70,12 @@ const CreateTask: React.FC<CreateTaskProps> = ({ onClose, onSave }) => {
           >
             Description:
           </label>
-          <input
-            type="text"
+          <textarea
             id="description"
             value={description}
             maxLength={250}
             onChange={handleDescriptionChange}
+            rows={4}
             className="mt-1 p-2 border border-gray-300 rounded w-full"
           />
         </div>
