@@ -7,14 +7,15 @@ interface TaskProps {
 }
 
 const TaskCard: React.FC<TaskProps> = ({ task }) => {
+  const cardStyles = `p-4 bg-white bg-opacity-30 rounded-lg border border-lilac ${task.completed ? 'filter grayscale contrast-200' : ''}`;
+  const titleColor = task.completed ? 'text-fuchsia-300' : 'text-fuchsia-800';
+  const descriptionColor = task.completed ? 'text-fuchsia-300' : 'text-fuchsia-700';
+
   return (
-    <div className="bg-gray-200 p-4 rounded-md mb-4">
-      <div className="flex justify-between items-center">
-        <span className="text-xl font-bold">{task.title}</span>
-        <span className="text-xs opacity-50">{task.id}</span>
+      <div className={cardStyles}>
+        <h2 className={`text-2xl font-bold ${titleColor}`}>{task.title}</h2>
+        <p className={`text ${descriptionColor}`}>{task.description}</p>
       </div>
-      <p className="text-sm mt-2">{task.description}</p>
-    </div>
   );
 };
 
