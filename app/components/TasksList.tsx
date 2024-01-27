@@ -45,6 +45,18 @@ const TasksList: React.FC<TasksListProps> = () => {
     )
   }
 
+  const onUpdateTask = (
+    taskId: string | number,
+    updatedTask: Partial<Task>,
+  ) => {
+    // Find the task in the array and update it
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === taskId ? { ...task, ...updatedTask } : task,
+      ),
+    )
+  }
+
   return (
     <div>
       <div className="text-center">
@@ -62,7 +74,12 @@ const TasksList: React.FC<TasksListProps> = () => {
             Not Completed
           </h2>
           {incompleteTasks.map((task) => (
-            <TaskCard key={task.id} task={task} onComplete={handleComplete} />
+            <TaskCard
+              key={task.id}
+              task={task}
+              onComplete={handleComplete}
+              onUpdateTask={onUpdateTask}
+            />
           ))}
         </div>
 
