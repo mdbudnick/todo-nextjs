@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 interface CreateTaskProps {
   onClose: () => void
@@ -22,7 +22,7 @@ const CreateTask: React.FC<CreateTaskProps> = ({ onClose, onSave }) => {
     setError('')
   }
 
-  const handleSave = () => {
+  const handleSave = useCallback(() => {
     if (!title || title.length > 100) {
       setError('Title must be between 1 and 100 characters.')
       return
@@ -35,12 +35,28 @@ const CreateTask: React.FC<CreateTaskProps> = ({ onClose, onSave }) => {
 
     onSave({ title, description })
     onClose()
-  }
+  }, [title, description, onSave, onClose])
 
-  const handleCancel = () => {
+  const handleCancel = useCallback(() => {
     // Close the window without saving
     onClose()
-  }
+  }, [onClose])
+
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        handleSave()
+      } else if (e.key === 'Escape') {
+        handleCancel()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyPress)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress)
+    }
+  }, [handleSave, handleCancel])
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
