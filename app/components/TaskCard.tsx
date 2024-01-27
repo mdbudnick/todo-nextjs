@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Task from '../types/Task'
 
 interface TaskProps {
@@ -9,7 +9,8 @@ interface TaskProps {
 }
 
 const TaskCard: React.FC<TaskProps> = ({ task, onComplete, onUpdateTask }) => {
-  const [isEditing, setIsEditing] = useState(false)
+  const [isEditingTitle, setIsEditingTitle] = useState(false)
+  const [isEditingDescription, setIsEditingDescription] = useState(false)
   const [updatedTitle, setUpdatedTitle] = useState(task.title)
   const [updatedDescription, setUpdatedDescription] = useState(task.description)
 
@@ -22,16 +23,37 @@ const TaskCard: React.FC<TaskProps> = ({ task, onComplete, onUpdateTask }) => {
     ? 'text-fuchsia-300'
     : 'text-fuchsia-700'
 
-  const handleEditClick = () => {
-    setIsEditing(true)
+  const titleInputRef = useRef<HTMLInputElement | null>(null)
+  const descriptionInputRef = useRef<HTMLInputElement | null>(null)
+
+  useEffect(() => {
+    if (isEditingTitle && titleInputRef.current) {
+      titleInputRef.current.focus()
+    } else if (isEditingDescription && descriptionInputRef.current) {
+      descriptionInputRef.current.focus()
+    }
+  }, [isEditingTitle, isEditingDescription])
+
+  const handleEditTitleClick = () => {
+    setIsEditingTitle(true)
   }
 
-  const handleBlur = () => {
-    setIsEditing(false)
+  const handleEditDescriptionClick = () => {
+    setIsEditingDescription(true)
+  }
+
+  const handleEdit = () => {
+    setIsEditingTitle(false)
+    setIsEditingDescription(false)
     onUpdateTask(task.id, {
       title: updatedTitle,
       description: updatedDescription,
     })
+  }
+
+  const handleCancelEdit = () => {
+    setIsEditingTitle(false)
+    setIsEditingDescription(false)
   }
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,26 +67,51 @@ const TaskCard: React.FC<TaskProps> = ({ task, onComplete, onUpdateTask }) => {
   return (
     <div className={cardStyles}>
       <div>
-        {isEditing ? (
-          <>
-            <input
-              type="text"
-              value={updatedTitle}
-              onChange={handleTitleChange}
-              onBlur={handleBlur}
-            />
-            <input
-              type="text"
-              value={updatedDescription}
-              onChange={handleDescriptionChange}
-              onBlur={handleBlur}
-            />
-          </>
+        {isEditingTitle ? (
+          <input
+            ref={titleInputRef}
+            type="text"
+            value={updatedTitle}
+            onChange={handleTitleChange}
+            onBlur={handleEdit}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleEdit()
+              } else if (e.key === 'Escape') {
+                handleCancelEdit()
+              }
+            }}
+          />
         ) : (
-          <>
-            <h2 onClick={handleEditClick} className={`text-2xl font-bold ${titleColor}`}>{task.title}</h2>
-            <p onClick={handleEditClick} className={`text ${descriptionColor}`}>{task.description}</p>
-          </>
+          <h2
+            onClick={handleEditTitleClick}
+            className={`text-2xl font-bold ${titleColor}`}
+          >
+            {task.title}
+          </h2>
+        )}
+        {isEditingDescription ? (
+          <input
+            ref={descriptionInputRef}
+            type="text"
+            value={updatedDescription}
+            onChange={handleDescriptionChange}
+            onBlur={handleEdit}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleEdit()
+              } else if (e.key === 'Escape') {
+                handleCancelEdit()
+              }
+            }}
+          />
+        ) : (
+          <p
+            onClick={handleEditDescriptionClick}
+            className={`text ${descriptionColor}`}
+          >
+            {task.description}
+          </p>
         )}
       </div>
       <div className="flex items-end justify-end mt-4">
