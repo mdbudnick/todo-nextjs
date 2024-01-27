@@ -14,13 +14,21 @@ const TasksList: React.FC<TasksListProps> = () => {
   const completedTasks = tasks.filter((task) => task.completed);
   const incompleteTasks = tasks.filter((task) => !task.completed);
 
+  const handleComplete = (taskId: string | number) => {
+    setTasks((tasks) =>
+      tasks.map((task) =>
+        task.id === taskId ? { ...task, completed: !task.completed } : task
+      )
+    );
+  };
+
   return (
     <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-10 mx-auto mt-10 ml-10 mr-10">
       {/* !Completed Tasks */}
       <div className="w-full md:w-1/2 mb-4 md:mb-0">
         <h2 className="text-2xl font-bold mb-4 text-fuchsia-800">Not Completed</h2>
         {incompleteTasks.map((task) => (
-          <TaskCard key={task.id} task={task} />
+          <TaskCard key={task.id} task={task} onComplete={handleComplete} />
         ))}
       </div>
 
@@ -28,7 +36,7 @@ const TasksList: React.FC<TasksListProps> = () => {
       <div className="w-full md:w-1/2">
         <h2 className="text-2xl font-bold mb-4 text-fuchsia-800">Completed</h2>
         {completedTasks.map((task) => (
-          <TaskCard key={task.id} task={task} />
+          <TaskCard key={task.id} task={task} onComplete={handleComplete} />
         ))}
       </div>
     </div>
