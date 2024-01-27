@@ -4,17 +4,17 @@ import Task from '../models/Task'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
 
-interface TaskProps {
+interface TaskCardProps {
   task: Task
   onComplete: (taskId: string | number) => void
-  onUpdateTask: (taskId: string | number, updatedTask: Partial<Task>) => void
+  onUpdate: (taskId: string | number, updatedTask: Partial<Task>) => void
   onDelete: (taskId: string) => void
 }
 
-const TaskCard: React.FC<TaskProps> = ({
+const TaskCard: React.FC<TaskCardProps> = ({
   task,
   onComplete,
-  onUpdateTask,
+  onUpdate,
   onDelete,
 }) => {
   const [isEditingTitle, setIsEditingTitle] = useState(false)
@@ -54,7 +54,7 @@ const TaskCard: React.FC<TaskProps> = ({
   const handleEdit = () => {
     setIsEditingTitle(false)
     setIsEditingDescription(false)
-    onUpdateTask(task.id, {
+    onUpdate(task.id!, {
       title: updatedTitle,
       description: updatedDescription,
     })

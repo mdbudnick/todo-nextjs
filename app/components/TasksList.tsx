@@ -68,7 +68,7 @@ const TasksList: React.FC<TasksListProps> = () => {
     setTasks(tasks)
   }
 
-  const onUpdateTask = (
+  const handleUpdate = (
     taskId: string | number,
     updatedTask: Partial<Task>,
   ) => {
@@ -117,7 +117,7 @@ const TasksList: React.FC<TasksListProps> = () => {
                   key={task.id}
                   task={task}
                   onComplete={handleComplete}
-                  onUpdateTask={onUpdateTask}
+                  onUpdate={handleUpdate}
                   onDelete={handleDelete}
                 />
               ))}
@@ -135,7 +135,7 @@ const TasksList: React.FC<TasksListProps> = () => {
                   key={task.id}
                   task={task}
                   onComplete={handleComplete}
-                  onUpdateTask={onUpdateTask}
+                  onUpdate={handleUpdate}
                   onDelete={handleDelete}
                 />
               ))}
