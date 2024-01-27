@@ -25,16 +25,18 @@ const initialTasks: Task[] = [
   },
 ]
 
+let TASK_ID_GENERATOR = 1000
+
 const TasksList: React.FC<TasksListProps> = () => {
   const [tasks, setTasks] = useState<Task[]>(initialTasks)
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [showCreateTask, setShowCreateTask] = useState(false)
   const filteredTasks = searchQuery
     ? tasks.filter(
-      (task) =>
-        task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        task.description.toLowerCase().includes(searchQuery.toLowerCase()),
-    )
+        (task) =>
+          task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          task.description?.toLowerCase().includes(searchQuery.toLowerCase()),
+      )
     : tasks
   const completedTasks = filteredTasks.filter((task) => task.completed)
   const incompleteTasks = filteredTasks.filter((task) => !task.completed)
@@ -47,12 +49,23 @@ const TasksList: React.FC<TasksListProps> = () => {
     )
   }
 
-  const handleCreateTaskClick = () => {
+  const handleOpenCreateTask = () => {
     setShowCreateTask(true)
   }
 
   const handleCloseCreateTask = () => {
     setShowCreateTask(false)
+  }
+
+  const handleCreate = (newTask: Task) => {
+    const { id, title, description, completed } = newTask
+    tasks.unshift({
+      id: id ?? ++TASK_ID_GENERATOR,
+      title,
+      description: description ?? '',
+      completed: completed ?? false,
+    })
+    setTasks(tasks)
   }
 
   const onUpdateTask = (
@@ -76,14 +89,16 @@ const TasksList: React.FC<TasksListProps> = () => {
       <div className="w-100">
         <button
           className="left-10 top-10 mr-10 ml-10 bg-blue-500 text-white px-4 py-2 rounded"
-          onClick={handleCreateTaskClick}
+          onClick={handleOpenCreateTask}
         >
           Create Task
         </button>
         {showCreateTask && (
           <div className="fixed inset-0 bg-black opacity-50 z-50"></div>
         )}
-        {showCreateTask && <CreateTask onClose={handleCloseCreateTask} />}
+        {showCreateTask && (
+          <CreateTask onSave={handleCreate} onClose={handleCloseCreateTask} />
+        )}
         <input
           type="text"
           placeholder="Search tasks..."

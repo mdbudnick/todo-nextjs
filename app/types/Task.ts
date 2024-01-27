@@ -1,8 +1,8 @@
 interface Task {
-  id: string | number
+  id?: string | number
   title: string
-  description: string
-  completed: boolean
+  description?: string
+  completed?: boolean
 }
 
 const expectedTypes: Record<string, string[]> = {
