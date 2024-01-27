@@ -1,21 +1,7 @@
 import '@testing-library/jest-dom'
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import TaskCard from '../../app/components/TaskCard'
-import Task from '@/app/models/Task'
-
-const TASK: Task = {
-  id: 100,
-  title: 'Test Task',
-  description: 'Test Description',
-  completed: false,
-}
-
-const COMPLETED_TASK: Task = {
-  id: 200,
-  title: 'Complete Task',
-  description: 'Task is complete',
-  completed: true,
-}
+import { INCOMPLETE_TASK, COMPLETE_TASK } from '../models/testTasks'
 
 test('renders TaskCard component', () => {
   const handleComplete = jest.fn()
@@ -24,15 +10,15 @@ test('renders TaskCard component', () => {
 
   render(
     <TaskCard
-      task={TASK}
+      task={INCOMPLETE_TASK}
       onComplete={handleComplete}
       onDelete={handleDelete}
       onUpdate={handleUpdate}
     />,
   )
 
-  expect(screen.getByText(TASK.title)).toBeInTheDocument()
-  expect(screen.getByText(TASK.description!)).toBeInTheDocument()
+  expect(screen.getByText(INCOMPLETE_TASK.title)).toBeInTheDocument()
+  expect(screen.getByText(INCOMPLETE_TASK.description!)).toBeInTheDocument()
   expect(screen.getByRole('checkbox')).not.toBeChecked()
   expect(screen.getByTitle('Delete Task')).toBeInTheDocument()
   expect(screen.getByTitle('Task Card')).toHaveClass(
@@ -42,15 +28,15 @@ test('renders TaskCard component', () => {
 
   render(
     <TaskCard
-      task={COMPLETED_TASK}
+      task={COMPLETE_TASK}
       onComplete={handleComplete}
       onDelete={handleDelete}
       onUpdate={handleUpdate}
     />,
   )
 
-  expect(screen.getByText(COMPLETED_TASK.title)).toBeInTheDocument()
-  expect(screen.getByText(COMPLETED_TASK.description!)).toBeInTheDocument()
+  expect(screen.getByText(COMPLETE_TASK.title)).toBeInTheDocument()
+  expect(screen.getByText(COMPLETE_TASK.description!)).toBeInTheDocument()
   expect(screen.getByRole('checkbox')).toBeChecked()
   expect(screen.getByTitle('Delete Task')).toBeInTheDocument()
   expect(screen.getByTitle('Task Card')).toHaveClass(
@@ -64,7 +50,7 @@ test('TaskCard component updates completed status', () => {
 
   render(
     <TaskCard
-      task={TASK}
+      task={INCOMPLETE_TASK}
       onComplete={handleComplete}
       onDelete={() => {}}
       onUpdate={() => {}}
@@ -73,7 +59,7 @@ test('TaskCard component updates completed status', () => {
   const completedCheck = screen.getByRole('checkbox')
   expect(completedCheck).not.toBeChecked()
   fireEvent.click(completedCheck)
-  expect(handleComplete).toHaveBeenCalledWith(TASK.id)
+  expect(handleComplete).toHaveBeenCalledWith(INCOMPLETE_TASK.id)
 })
 
 test('Updates task title on click and blur', () => {
@@ -81,7 +67,7 @@ test('Updates task title on click and blur', () => {
 
   render(
     <TaskCard
-      task={TASK}
+      task={INCOMPLETE_TASK}
       onComplete={() => {}}
       onDelete={() => {}}
       onUpdate={handleUpdate}
@@ -94,9 +80,9 @@ test('Updates task title on click and blur', () => {
     target: { value: 'New Title' },
   })
   fireEvent.blur(screen.getByRole('textbox'))
-  expect(handleUpdate).toHaveBeenCalledWith(TASK.id, {
+  expect(handleUpdate).toHaveBeenCalledWith(INCOMPLETE_TASK.id, {
     title: 'New Title',
-    description: TASK.description,
+    description: INCOMPLETE_TASK.description,
   })
 })
 
@@ -105,7 +91,7 @@ test('Updates task description on click and blur', () => {
 
   render(
     <TaskCard
-      task={TASK}
+      task={INCOMPLETE_TASK}
       onComplete={() => {}}
       onDelete={() => {}}
       onUpdate={handleUpdate}
@@ -118,9 +104,9 @@ test('Updates task description on click and blur', () => {
     target: { value: 'New Description' },
   })
   fireEvent.blur(screen.getByRole('textbox'))
-  expect(handleUpdate).toHaveBeenCalledWith(TASK.id, {
+  expect(handleUpdate).toHaveBeenCalledWith(INCOMPLETE_TASK.id, {
     description: 'New Description',
-    title: TASK.title,
+    title: INCOMPLETE_TASK.title,
   })
 })
 
@@ -129,7 +115,7 @@ test('TaskCard delete functionality', () => {
 
   render(
     <TaskCard
-      task={TASK}
+      task={INCOMPLETE_TASK}
       onComplete={() => {}}
       onUpdate={() => {}}
       onDelete={handleDelete}
@@ -152,5 +138,5 @@ test('TaskCard delete functionality', () => {
   fireEvent.click(screen.getByTitle('Delete Task'))
   fireEvent.click(screen.getByTitle('Confirm Delete'))
 
-  expect(handleDelete).toHaveBeenCalledWith(TASK.id)
+  expect(handleDelete).toHaveBeenCalledWith(INCOMPLETE_TASK.id)
 })
