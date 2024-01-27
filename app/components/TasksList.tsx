@@ -4,30 +4,13 @@ import TaskCard from './TaskCard'
 import CreateTask from './CreateTask'
 import Task from '../models/Task'
 
-const initialTasks: Task[] = [
-  {
-    id: 1,
-    title: 'Task 1',
-    description: 'Description for Task 1',
-    completed: false,
-  },
-  {
-    id: 2,
-    title: 'Task 2',
-    description: 'Description for Task 2',
-    completed: true,
-  },
-  {
-    id: 3,
-    title: 'Task 3',
-    description: 'Description for Task 3',
-    completed: false,
-  },
-]
+interface TasksListProps {
+  initialTasks: Task[]
+}
 
 let TASK_ID_GENERATOR = 1000
 
-const TasksList: React.FC<TasksListProps> = () => {
+const TasksList: React.FC<TasksListProps> = ({ initialTasks }) => {
   const [tasks, setTasks] = useState<Task[]>(initialTasks)
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [showCreateTask, setShowCreateTask] = useState(false)
