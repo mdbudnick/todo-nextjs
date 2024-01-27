@@ -1,19 +1,21 @@
-"use client"
-import React from 'react';
-import Task from '../types/Task';
+'use client'
+import React from 'react'
+import Task from '../types/Task'
 
 interface TaskProps {
-  task: Task;
-  onComplete: (taskId: string | number) => void;
+  task: Task
+  onComplete: (taskId: string | number) => void
 }
 
 const TaskCard: React.FC<TaskProps> = ({ task, onComplete }) => {
   const handleComplete = () => {
-    onComplete(task.id);
-  };
-  const cardStyles = `p-4 bg-white bg-opacity-30 rounded-lg border border-lilac mb-4 ${task.completed ? 'filter grayscale contrast-200' : ''}`;
-  const titleColor = task.completed ? 'text-fuchsia-300' : 'text-fuchsia-800';
-  const descriptionColor = task.completed ? 'text-fuchsia-300' : 'text-fuchsia-700';
+    onComplete(task.id)
+  }
+  const cardStyles = `p-4 bg-white bg-opacity-30 rounded-lg border border-lilac mb-4 ${task.completed ? 'filter grayscale contrast-200' : ''}`
+  const titleColor = task.completed ? 'text-fuchsia-300' : 'text-fuchsia-800'
+  const descriptionColor = task.completed
+    ? 'text-fuchsia-300'
+    : 'text-fuchsia-700'
 
   return (
     <div className={cardStyles}>
@@ -31,7 +33,7 @@ const TaskCard: React.FC<TaskProps> = ({ task, onComplete }) => {
         </label>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default TaskCard;
+export default TaskCard

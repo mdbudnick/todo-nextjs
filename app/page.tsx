@@ -1,18 +1,18 @@
-import React from 'react';
-import TasksList from './components/TasksList';
-import './globals.css';
-import Task from './types/Task';
+import React from 'react'
+import TasksList from './components/TasksList'
+import './globals.css'
+import Task from './types/Task'
 
 interface HomeProps {
-  tasks: Task[];
+  tasks: Task[]
 }
 
-const Home: React.FC<HomeProps> = ({}) => {
+const Home: React.FC<HomeProps> = () => {
   return (
     <div>
       <TasksList />
     </div>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home
