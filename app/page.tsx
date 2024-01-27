@@ -1,7 +1,7 @@
 import React from 'react'
 import TasksList from './components/TasksList'
 import './globals.css'
-import Task from './types/Task'
+import Task from './models/Task'
 
 interface HomeProps {
   tasks: Task[]

@@ -2,7 +2,7 @@
 import React, { useState } from 'react'
 import TaskCard from './TaskCard'
 import CreateTask from './CreateTask'
-import Task from '../types/Task'
+import Task from '../models/Task'
 
 const initialTasks: Task[] = [
   {
