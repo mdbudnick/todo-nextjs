@@ -107,30 +107,40 @@ const TasksList: React.FC<TasksListProps> = () => {
       </div>
       <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-10 mx-auto mt-10 ml-10 mr-10">
         <div className="w-full md:w-1/2 mb-4 md:mb-0">
-          <h2 className="text-2xl font-bold mb-4 text-fuchsia-800">To Do</h2>
-          {incompleteTasks.map((task) => (
-            <TaskCard
-              key={task.id}
-              task={task}
-              onComplete={handleComplete}
-              onUpdateTask={onUpdateTask}
-              onDelete={handleDelete}
-            />
-          ))}
+          {incompleteTasks.length ? (
+            <>
+              <h2 className="text-2xl font-bold mb-4 text-fuchsia-800">
+                To Do
+              </h2>
+              {incompleteTasks.map((task) => (
+                <TaskCard
+                  key={task.id}
+                  task={task}
+                  onComplete={handleComplete}
+                  onUpdateTask={onUpdateTask}
+                  onDelete={handleDelete}
+                />
+              ))}
+            </>
+          ) : null}
         </div>
         <div className="w-full md:w-1/2">
-          <h2 className="text-2xl font-bold mb-4 text-fuchsia-800">
-            Completed
-          </h2>
-          {completedTasks.map((task) => (
-            <TaskCard
-              key={task.id}
-              task={task}
-              onComplete={handleComplete}
-              onUpdateTask={onUpdateTask}
-              onDelete={handleDelete}
-            />
-          ))}
+          {completedTasks.length ? (
+            <>
+              <h2 className="text-2xl font-bold mb-4 text-fuchsia-800">
+                Completed
+              </h2>
+              {completedTasks.map((task) => (
+                <TaskCard
+                  key={task.id}
+                  task={task}
+                  onComplete={handleComplete}
+                  onUpdateTask={onUpdateTask}
+                  onDelete={handleDelete}
+                />
+              ))}
+            </>
+          ) : null}
         </div>
       </div>
     </div>
