@@ -50,11 +50,15 @@ const TasksList: React.FC<TasksListProps> = () => {
     updatedTask: Partial<Task>,
   ) => {
     // Find the task in the array and update it
-    setTasks((prevTasks) =>
-      prevTasks.map((task) =>
+    setTasks((tasks) =>
+      tasks.map((task) =>
         task.id === taskId ? { ...task, ...updatedTask } : task,
       ),
     )
+  }
+
+  const handleDelete = (taskId: string | number) => {
+    setTasks((tasks) => tasks.filter((task) => task.id !== taskId))
   }
 
   return (
@@ -79,6 +83,7 @@ const TasksList: React.FC<TasksListProps> = () => {
               task={task}
               onComplete={handleComplete}
               onUpdateTask={onUpdateTask}
+              onDelete={handleDelete}
             />
           ))}
         </div>
@@ -89,7 +94,13 @@ const TasksList: React.FC<TasksListProps> = () => {
             Completed
           </h2>
           {completedTasks.map((task) => (
-            <TaskCard key={task.id} task={task} onComplete={handleComplete} />
+            <TaskCard
+              key={task.id}
+              task={task}
+              onComplete={handleComplete}
+              onUpdateTask={onUpdateTask}
+              onDelete={handleDelete}
+            />
           ))}
         </div>
       </div>

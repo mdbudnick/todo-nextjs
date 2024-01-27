@@ -1,18 +1,27 @@
 'use client'
 import React, { useEffect, useRef, useState } from 'react'
 import Task from '../types/Task'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrash } from '@fortawesome/free-solid-svg-icons'
 
 interface TaskProps {
   task: Task
   onComplete: (taskId: string | number) => void
   onUpdateTask: (taskId: string | number, updatedTask: Partial<Task>) => void
+  onDelete: (taskId: string) => void
 }
 
-const TaskCard: React.FC<TaskProps> = ({ task, onComplete, onUpdateTask }) => {
+const TaskCard: React.FC<TaskProps> = ({
+  task,
+  onComplete,
+  onUpdateTask,
+  onDelete,
+}) => {
   const [isEditingTitle, setIsEditingTitle] = useState(false)
   const [isEditingDescription, setIsEditingDescription] = useState(false)
   const [updatedTitle, setUpdatedTitle] = useState(task.title)
   const [updatedDescription, setUpdatedDescription] = useState(task.description)
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false)
 
   const handleComplete = () => {
     onComplete(task.id)
@@ -62,6 +71,19 @@ const TaskCard: React.FC<TaskProps> = ({ task, onComplete, onUpdateTask }) => {
 
   const handleDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUpdatedDescription(e.target.value)
+  }
+
+  const handleDeleteClick = () => {
+    setShowDeleteConfirmation(true)
+  }
+
+  const handleDeleteConfirmed = () => {
+    onDelete(task.id)
+    setShowDeleteConfirmation(false)
+  }
+
+  const handleDeleteCancelled = () => {
+    setShowDeleteConfirmation(false)
   }
 
   return (
@@ -117,16 +139,43 @@ const TaskCard: React.FC<TaskProps> = ({ task, onComplete, onUpdateTask }) => {
           </p>
         )}
       </div>
-      <div className="flex items-end justify-end mt-4">
-        <label className="inline-flex items-center">
-          <input
-            type="checkbox"
-            checked={task.completed}
-            onChange={handleComplete}
-            className="form-checkbox h-5 w-5 text-indigo-600"
-          />
-          <span className="ml-2 text-gray-700">Complete</span>
-        </label>
+      <div className="flex items-end justify-between mt-4">
+        <div className="flex items-center">
+          <label className="inline-flex items-center">
+            <input
+              type="checkbox"
+              checked={task.completed}
+              onChange={handleComplete}
+              className="form-checkbox h-5 w-5 text-indigo-600"
+            />
+            <span className="ml-2 text-gray-700">Complete</span>
+          </label>
+        </div>
+        <div className="flex items-center">
+          {showDeleteConfirmation || (
+            <FontAwesomeIcon
+              icon={faTrash}
+              className="text-red-500 cursor-pointer"
+              onClick={handleDeleteClick}
+            />
+          )}
+          {showDeleteConfirmation && (
+            <div className="flex items-center space-x-4 text-xs">
+              <button
+                onClick={handleDeleteConfirmed}
+                className="h-5 px-2 py-1 bg-red-500 text-white rounded"
+              >
+                Delete
+              </button>
+              <button
+                onClick={handleDeleteCancelled}
+                className="h-5 px-2 py-1 bg-gray-400 text-white rounded"
+              >
+                Cancel
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )
