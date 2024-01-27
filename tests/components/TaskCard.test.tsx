@@ -35,6 +35,9 @@ test('renders TaskCard component', () => {
   expect(screen.getByText(TASK.description!)).toBeInTheDocument()
   expect(screen.getByRole('checkbox')).not.toBeChecked()
   expect(screen.getByTitle('Delete Task')).toBeInTheDocument()
+  expect(screen.getByTitle('Task Card')).toHaveClass(
+    'p-4 bg-white bg-opacity-30 rounded-lg border border-lilac mb-4',
+  )
   cleanup()
 
   render(
@@ -50,6 +53,9 @@ test('renders TaskCard component', () => {
   expect(screen.getByText(COMPLETED_TASK.description!)).toBeInTheDocument()
   expect(screen.getByRole('checkbox')).toBeChecked()
   expect(screen.getByTitle('Delete Task')).toBeInTheDocument()
+  expect(screen.getByTitle('Task Card')).toHaveClass(
+    'p-4 bg-white bg-opacity-30 rounded-lg border border-lilac mb-4 filter grayscale contrast-200',
+  )
 })
 
 test('TaskCard component updates completed status', () => {

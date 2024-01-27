@@ -89,7 +89,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
   }
 
   return (
-    <div className={cardStyles}>
+    <div title="Task Card" className={cardStyles}>
       <div>
         {isEditingTitle ? (
           <input
