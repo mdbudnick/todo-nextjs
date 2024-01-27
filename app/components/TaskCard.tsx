@@ -72,6 +72,8 @@ const TaskCard: React.FC<TaskProps> = ({ task, onComplete, onUpdateTask }) => {
             ref={titleInputRef}
             type="text"
             value={updatedTitle}
+            minLength={1}
+            maxLength={100}
             onChange={handleTitleChange}
             onBlur={handleEdit}
             onKeyDown={(e) => {
@@ -95,6 +97,7 @@ const TaskCard: React.FC<TaskProps> = ({ task, onComplete, onUpdateTask }) => {
             ref={descriptionInputRef}
             type="text"
             value={updatedDescription}
+            maxLength={250}
             onChange={handleDescriptionChange}
             onBlur={handleEdit}
             onKeyDown={(e) => {
