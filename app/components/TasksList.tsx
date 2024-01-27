@@ -72,7 +72,6 @@ const TasksList: React.FC<TasksListProps> = () => {
     taskId: string | number,
     updatedTask: Partial<Task>,
   ) => {
-    // Find the task in the array and update it
     setTasks((tasks) =>
       tasks.map((task) =>
         task.id === taskId ? { ...task, ...updatedTask } : task,
@@ -107,7 +106,6 @@ const TasksList: React.FC<TasksListProps> = () => {
         />
       </div>
       <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-10 mx-auto mt-10 ml-10 mr-10">
-        {/* !Completed Tasks */}
         <div className="w-full md:w-1/2 mb-4 md:mb-0">
           <h2 className="text-2xl font-bold mb-4 text-fuchsia-800">To Do</h2>
           {incompleteTasks.map((task) => (
@@ -120,8 +118,6 @@ const TasksList: React.FC<TasksListProps> = () => {
             />
           ))}
         </div>
-
-        {/* Completed Tasks */}
         <div className="w-full md:w-1/2">
           <h2 className="text-2xl font-bold mb-4 text-fuchsia-800">
             Completed
