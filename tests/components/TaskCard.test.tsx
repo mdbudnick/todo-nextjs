@@ -78,3 +78,34 @@ test('updates task description on click and blur', () => {
     title: TASK.title,
   })
 })
+
+test('TaskCard delete functionality', () => {
+  const handleDelete = jest.fn()
+
+  render(
+    <TaskCard
+      task={TASK}
+      onComplete={() => {}}
+      onUpdate={() => {}}
+      onDelete={handleDelete}
+    />,
+  )
+
+  const deleteIcon = screen.getByTitle('Delete Task')
+  expect(deleteIcon).toBeInTheDocument()
+
+  fireEvent.click(deleteIcon)
+  // Delete and Cancel buttons should appear
+  const deleteButton = screen.getByTitle('Confirm Delete')
+  const cancelButton = screen.getByTitle('Cancel Delete')
+  expect(deleteButton).toBeInTheDocument()
+  expect(cancelButton).toBeInTheDocument()
+  fireEvent.click(cancelButton)
+
+  // Delete Icon should be back
+  expect(screen.queryByTitle('Delete Task')).toBeInTheDocument()
+  fireEvent.click(screen.getByTitle('Delete Task'))
+  fireEvent.click(screen.getByTitle('Confirm Delete'))
+
+  expect(handleDelete).toHaveBeenCalledWith(TASK.id)
+})

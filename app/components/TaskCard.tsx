@@ -165,12 +165,14 @@ const TaskCard: React.FC<TaskCardProps> = ({
           {showDeleteConfirmation && (
             <div className="flex items-center space-x-4 text-xs">
               <button
+                title="Confirm Delete"
                 onClick={handleDeleteConfirmed}
                 className="h-5 px-2 py-1 bg-red-500 text-white rounded"
               >
                 Delete
               </button>
               <button
+                title="Cancel Delete"
                 onClick={handleDeleteCancelled}
                 className="h-5 px-2 py-1 bg-gray-400 text-white rounded"
               >
