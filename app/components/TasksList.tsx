@@ -12,25 +12,24 @@ const initialTasks: Task[] = [
 const TasksList: React.FC<TasksListProps> = () => {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const completedTasks = tasks.filter((task) => task.completed);
-  const notCompletedTasks = tasks.filter((task) => !task.completed);
+  const incompleteTasks = tasks.filter((task) => !task.completed);
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-      <div style={{ flex: 1 }}>
-        <h2>To Do</h2>
-        <ul>
-          {notCompletedTasks.map((task) => (
-            <TaskCard key={task.id} task={task} />
-          ))}
-        </ul>
+    <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-10 mx-auto mt-10 ml-10 mr-10">
+      {/* !Completed Tasks */}
+      <div className="w-full md:w-1/2 mb-4 md:mb-0">
+        <h2 className="text-2xl font-bold mb-4 text-fuchsia-800">Not Completed</h2>
+        {incompleteTasks.map((task) => (
+          <TaskCard key={task.id} task={task} />
+        ))}
       </div>
-      <div style={{ flex: 1 }}>
-        <h2>Done</h2>
-        <ul>
-          {completedTasks.map((task) => (
-            <TaskCard key={task.id} task={task} />
-          ))}
-        </ul>
+
+      {/* Completed Tasks */}
+      <div className="w-full md:w-1/2">
+        <h2 className="text-2xl font-bold mb-4 text-fuchsia-800">Completed</h2>
+        {completedTasks.map((task) => (
+          <TaskCard key={task.id} task={task} />
+        ))}
       </div>
     </div>
   );

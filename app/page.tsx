@@ -10,7 +10,6 @@ interface HomeProps {
 const Home: React.FC<HomeProps> = ({}) => {
   return (
     <div>
-      <h1>Task Management</h1>
       <TasksList />
     </div>
   );
