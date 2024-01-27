@@ -24,7 +24,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false)
 
   const handleComplete = () => {
-    onComplete(task.id)
+    onComplete(task.id!)
   }
   const cardStyles = `p-4 bg-white bg-opacity-30 rounded-lg border border-lilac mb-4 ${task.completed ? 'filter grayscale contrast-200' : ''}`
   const titleColor = task.completed ? 'text-fuchsia-300' : 'text-fuchsia-800'
@@ -80,7 +80,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
   }
 
   const handleDeleteConfirmed = () => {
-    onDelete(task.id)
+    onDelete(task.id!)
     setShowDeleteConfirmation(false)
   }
 
@@ -156,6 +156,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
         <div className="flex items-center">
           {showDeleteConfirmation || (
             <FontAwesomeIcon
+              title="Delete Task"
               icon={faTrash}
               className="text-red-500 cursor-pointer"
               onClick={handleDeleteClick}
