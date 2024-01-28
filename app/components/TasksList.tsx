@@ -1,8 +1,9 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import TaskCard from './TaskCard'
 import CreateTask from './CreateTask'
 import Task from '../models/Task'
+import API_URL from '../utils/hostUrl'
 
 interface TasksListProps {
   initialTasks: Task[]
@@ -14,6 +15,23 @@ const TasksList: React.FC<TasksListProps> = ({ initialTasks }) => {
   const [tasks, setTasks] = useState<Task[]>(initialTasks)
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [showCreateTask, setShowCreateTask] = useState(false)
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const response = await fetch(API_URL + '/tasks')
+        if (!response.ok) {
+          throw new Error('Failed to fetch tasks')
+        }
+
+        const data = await response.json()
+        setTasks(data)
+      } catch (error) {
+        console.error('Error fetching tasks:', error)
+      }
+    }
+
+    fetchTasks()
+  }, [])
   const filteredTasks = searchQuery
     ? tasks.filter(
         (task) =>
