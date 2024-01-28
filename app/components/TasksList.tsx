@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import TaskCard from './TaskCard'
 import CreateTask from './CreateTask'
 import Task from '../models/Task'
-import API_URL from '../utils/hostUrl'
+import * as taskApi from '../utils/taskApi'
 
 interface TasksListProps {
   initialTasks: Task[]
@@ -21,18 +21,8 @@ const TasksList: React.FC<TasksListProps> = ({ initialTasks }) => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await fetch(API_URL + '/tasks', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
-        if (!response.ok) {
-          throw new Error('Failed to fetch tasks')
-        }
-
-        const data = await response.json()
-        setTasks(data.tasks as Task[])
+        const data = await taskApi.fetchPaginatedTasks()
+        setTasks(data.tasks)
       } catch (error) {
         toast.error('Failed to fetch tasks', {
           position: 'top-center',
