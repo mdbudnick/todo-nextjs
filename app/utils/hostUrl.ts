@@ -7,11 +7,12 @@ if (process.env.TASKS_API_HOST) {
     ? `:${process.env.TASKS_API_PORT}`
     : ''
 } else {
+  // Use parentheses to ensure correct order of operations
   constructApiUrl =
-    'http://localhost' + process.env.TASKS_API_PORT
-      ? `:${process.env.TASKS_API_PORT}`
-      : ':3001'
+    'http://localhost' +
+    (process.env.TASKS_API_PORT ? `:${process.env.TASKS_API_PORT}` : ':3001')
 }
+
 const API_URL = constructApiUrl
 
 export default API_URL
