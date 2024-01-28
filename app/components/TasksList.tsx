@@ -1,5 +1,7 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import TaskCard from './TaskCard'
 import CreateTask from './CreateTask'
 import Task from '../models/Task'
@@ -15,22 +17,38 @@ const TasksList: React.FC<TasksListProps> = ({ initialTasks }) => {
   const [tasks, setTasks] = useState<Task[]>(initialTasks)
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [showCreateTask, setShowCreateTask] = useState(false)
+  const isMounted = useRef(true)
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await fetch(API_URL + '/tasks')
+        const response = await fetch(API_URL + '/tasks', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
         if (!response.ok) {
           throw new Error('Failed to fetch tasks')
         }
 
         const data = await response.json()
-        setTasks(data)
+        setTasks(data.tasks as Task[])
       } catch (error) {
-        console.error('Error fetching tasks:', error)
+        toast.error('Failed to fetch tasks', {
+          position: 'top-center',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        })
       }
     }
-
-    fetchTasks()
+    if (isMounted) {
+      fetchTasks()
+    }
   }, [])
   const filteredTasks = searchQuery
     ? tasks.filter(
@@ -87,6 +105,7 @@ const TasksList: React.FC<TasksListProps> = ({ initialTasks }) => {
   return (
     <div>
       <div className="w-100">
+        <ToastContainer />
         <button
           className="left-10 top-10 mr-10 ml-10 bg-blue-500 text-white px-4 py-2 rounded"
           onClick={handleOpenCreateTask}
