@@ -3,6 +3,7 @@ import TasksList from './components/TasksList'
 import './globals.css'
 import Task from './models/Task'
 import * as cookies from './utils/cookies'
+import API_URL from './utils/hostUrl'
 
 interface HomeProps {}
 
@@ -33,23 +34,7 @@ const Home: React.FC<HomeProps> = () => {
   useEffect(() => {
     const fetchSessionId = async () => {
       try {
-        let sessionApiUrl = ''
-
-        if (process.env.TASKS_API_HOST) {
-          sessionApiUrl = `http://${process.env.TASKS_API_HOST}`
-
-          sessionApiUrl += process.env.TASKS_API_PORT
-            ? `:${process.env.TASKS_API_PORT}`
-            : ''
-        } else {
-          sessionApiUrl =
-            'http://localhost' + process.env.TASKS_API_PORT
-              ? `:${process.env.TASKS_API_PORT}`
-              : ':3000'
-        }
-
-        sessionApiUrl += '/session-id'
-        const response = await fetch(sessionApiUrl)
+        const response = await fetch(API_URL + '/session-id')
         const data = await response.json()
 
         setSessionId(data.id)
