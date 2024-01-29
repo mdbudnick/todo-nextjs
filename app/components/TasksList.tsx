@@ -1,19 +1,38 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import TaskCard from './TaskCard'
 import CreateTask from './CreateTask'
 import Task from '../models/Task'
+import * as taskApi from '../utils/taskApi'
+import { DEFAULT_ERROR_OPTIONS } from '../utils/toast'
 
 interface TasksListProps {
   initialTasks: Task[]
 }
 
-let TASK_ID_GENERATOR = 1000
-
 const TasksList: React.FC<TasksListProps> = ({ initialTasks }) => {
   const [tasks, setTasks] = useState<Task[]>(initialTasks)
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [showCreateTask, setShowCreateTask] = useState(false)
+  const isMounted = useRef(true)
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const data = await taskApi.fetchPaginatedTasks()
+        setTasks(data.tasks)
+      } catch (error) {
+        toast.error(
+          'There was a problem fetching your tasks, please try refreshing the page',
+          DEFAULT_ERROR_OPTIONS,
+        )
+      }
+    }
+    if (isMounted) {
+      fetchTasks()
+    }
+  }, [])
   const filteredTasks = searchQuery
     ? tasks.filter(
         (task) =>
@@ -24,12 +43,29 @@ const TasksList: React.FC<TasksListProps> = ({ initialTasks }) => {
   const completedTasks = filteredTasks.filter((task) => task.completed)
   const incompleteTasks = filteredTasks.filter((task) => !task.completed)
 
-  const handleComplete = (taskId: string | number) => {
-    setTasks((tasks) =>
-      tasks.map((task) =>
-        task.id === taskId ? { ...task, completed: !task.completed } : task,
-      ),
-    )
+  const updateTask = async (taskId: string | number, updatedTask: Task) => {
+    try {
+      await taskApi.updateTask(taskId, updatedTask)
+      setTasks((tasks) =>
+        tasks.map((task) =>
+          task.id === taskId ? { ...task, ...updatedTask } : task,
+        ),
+      )
+    } catch (error) {
+      toast.error(
+        'There was a problem updating the task, please try again',
+        DEFAULT_ERROR_OPTIONS,
+      )
+    }
+  }
+
+  const handleComplete = async (taskId: string | number) => {
+    const indexUpdateTask = tasks.findIndex((task) => task.id === taskId)
+    const updatedTask = {
+      ...tasks[indexUpdateTask],
+      completed: !tasks[indexUpdateTask].completed,
+    }
+    updateTask(taskId, updatedTask)
   }
 
   const handleOpenCreateTask = () => {
@@ -40,35 +76,46 @@ const TasksList: React.FC<TasksListProps> = ({ initialTasks }) => {
     setShowCreateTask(false)
   }
 
-  const handleCreate = (newTask: Task) => {
-    const { id, title, description, completed } = newTask
-    tasks.unshift({
-      id: id ?? ++TASK_ID_GENERATOR,
-      title,
-      description: description ?? '',
-      completed: completed ?? false,
-    })
-    setTasks(tasks)
+  const handleCreate = async (newTask: Task) => {
+    try {
+      const taskFromServer = await taskApi.createTask(newTask)
+      setTasks(() => [taskFromServer, ...tasks])
+    } catch (error) {
+      toast.error(
+        'There was a problem creating the task, please try again',
+        DEFAULT_ERROR_OPTIONS,
+      )
+    }
   }
 
-  const handleUpdate = (
+  const handleUpdate = async (
     taskId: string | number,
     updatedTask: Partial<Task>,
   ) => {
-    setTasks((tasks) =>
-      tasks.map((task) =>
-        task.id === taskId ? { ...task, ...updatedTask } : task,
-      ),
-    )
+    const existingTask = tasks.find((task) => task.id === taskId)
+    if (!existingTask) {
+      toast.error('We cannot find the task to update', DEFAULT_ERROR_OPTIONS)
+      return
+    }
+    updateTask(taskId, { ...existingTask, ...updatedTask })
   }
 
-  const handleDelete = (taskId: string | number) => {
-    setTasks((tasks) => tasks.filter((task) => task.id !== taskId))
+  const handleDelete = async (taskId: string | number) => {
+    try {
+      await taskApi.deleteTask(taskId)
+      setTasks((tasks) => tasks.filter((task) => task.id !== taskId))
+    } catch {
+      toast.error(
+        'There was a problem deleting the task, please try again',
+        DEFAULT_ERROR_OPTIONS,
+      )
+    }
   }
 
   return (
     <div>
       <div className="w-100">
+        <ToastContainer />
         <button
           className="left-10 top-10 mr-10 ml-10 bg-blue-500 text-white px-4 py-2 rounded"
           onClick={handleOpenCreateTask}
