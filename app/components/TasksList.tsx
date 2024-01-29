@@ -11,8 +11,6 @@ interface TasksListProps {
   initialTasks: Task[]
 }
 
-let TASK_ID_GENERATOR = 1000
-
 const TasksList: React.FC<TasksListProps> = ({ initialTasks }) => {
   const [tasks, setTasks] = useState<Task[]>(initialTasks)
   const [searchQuery, setSearchQuery] = useState<string>('')
@@ -85,15 +83,22 @@ const TasksList: React.FC<TasksListProps> = ({ initialTasks }) => {
     setShowCreateTask(false)
   }
 
-  const handleCreate = (newTask: Task) => {
-    const { id, title, description, completed } = newTask
-    tasks.unshift({
-      id: id ?? ++TASK_ID_GENERATOR,
-      title,
-      description: description ?? '',
-      completed: completed ?? false,
-    })
-    setTasks(tasks)
+  const handleCreate = async (newTask: Task) => {
+    try {
+      const taskFromServer = await taskApi.createTask(newTask)
+      setTasks(() => [taskFromServer, ...tasks])
+    } catch (error) {
+      toast.error('Failed to create task, please try again', {
+        position: 'top-center',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      })
+    }
   }
 
   const handleUpdate = (
