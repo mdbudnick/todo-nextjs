@@ -2,21 +2,41 @@ import API_URL from './hostUrl'
 import Task from '../models/Task'
 import PaginatedTasks from '../models/PaginatedTasks'
 
-const getTasksUrl = (): URL => {
-  return new URL('/tasks', API_URL)
+interface URLOptions {
+  version: 'v1'
 }
 
-const getTaskIdUrl = (id: string | number): URL => {
-  return new URL(`${id}/tasks`, API_URL)
+interface GetTasksOptions extends URLOptions {
+  page?: number
+  pageSize?: number
+}
+
+const getTasksUrl = (options?: URLOptions): URL => {
+  const baseUrl = new URL(API_URL)
+  const path = options?.version ? `/${options.version}/tasks` : '/v1/tasks'
+  baseUrl.pathname = path
+
+  return baseUrl
+}
+
+const getTaskIdUrl = (id: string | number, options?: URLOptions): URL => {
+  const baseUrl = new URL(API_URL)
+  const path = options?.version ? `/${options.version}/tasks` : '/v1/tasks'
+  baseUrl.pathname = path
+  baseUrl.pathname += `/${id}`
+
+  return baseUrl
 }
 
 export const fetchPaginatedTasks = async (
-  page: number = 1,
-  pageSize: number = 200,
+  options?: GetTasksOptions,
 ): Promise<PaginatedTasks> => {
   const url = getTasksUrl()
-  url.searchParams.append('page', page.toString())
-  url.searchParams.append('pageSize', pageSize.toString())
+  url.searchParams.append('page', options?.page ? options.page.toString() : '1')
+  url.searchParams.append(
+    'pageSize',
+    options?.pageSize ? options.pageSize.toString() : '20',
+  )
 
   const response = await fetch(url, {
     method: 'GET',
@@ -33,8 +53,11 @@ export const fetchPaginatedTasks = async (
   return data
 }
 
-export const createTask = async (newTask: Omit<Task, 'id'>): Promise<Task> => {
-  const response = await fetch(getTasksUrl(), {
+export const createTask = async (
+  newTask: Omit<Task, 'id'>,
+  options?: URLOptions,
+): Promise<Task> => {
+  const response = await fetch(getTasksUrl(options), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -56,7 +79,7 @@ export const getTaskById = async (
   const response = await fetch(getTaskIdUrl(id))
 
   if (response.status === 404) {
-    return null // Task not found
+    return null
   }
 
   if (!response.ok) {
