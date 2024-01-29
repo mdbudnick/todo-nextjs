@@ -6,6 +6,7 @@ import TaskCard from './TaskCard'
 import CreateTask from './CreateTask'
 import Task from '../models/Task'
 import * as taskApi from '../utils/taskApi'
+import { DEFAULT_ERROR_OPTIONS } from '../utils/toast'
 
 interface TasksListProps {
   initialTasks: Task[]
@@ -57,16 +58,10 @@ const TasksList: React.FC<TasksListProps> = ({ initialTasks }) => {
         ),
       )
     } catch (error) {
-      toast.error('Failed to update task, please try again', {
-        position: 'top-center',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-      })
+      toast.error(
+        'Failed to update task, please try again',
+        DEFAULT_ERROR_OPTIONS,
+      )
     }
   }
 
@@ -92,16 +87,10 @@ const TasksList: React.FC<TasksListProps> = ({ initialTasks }) => {
       const taskFromServer = await taskApi.createTask(newTask)
       setTasks(() => [taskFromServer, ...tasks])
     } catch (error) {
-      toast.error('Failed to create task, please try again', {
-        position: 'top-center',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-      })
+      toast.error(
+        'Failed to create task, please try again',
+        DEFAULT_ERROR_OPTIONS,
+      )
     }
   }
 
@@ -111,16 +100,7 @@ const TasksList: React.FC<TasksListProps> = ({ initialTasks }) => {
   ) => {
     const existingTask = tasks.find((task) => task.id === taskId)
     if (!existingTask) {
-      toast.error('Failed to find task to update', {
-        position: 'top-center',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-      })
+      toast.error('Failed to find task to update', DEFAULT_ERROR_OPTIONS)
       return
     }
     updateTask(taskId, { ...existingTask, ...updatedTask })
@@ -131,16 +111,10 @@ const TasksList: React.FC<TasksListProps> = ({ initialTasks }) => {
       await taskApi.deleteTask(taskId)
       setTasks((tasks) => tasks.filter((task) => task.id !== taskId))
     } catch {
-      toast.error('Failed to delete task, please try again', {
-        position: 'top-center',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-      })
+      toast.error(
+        'Failed to delete task, please try again',
+        DEFAULT_ERROR_OPTIONS,
+      )
     }
   }
 
