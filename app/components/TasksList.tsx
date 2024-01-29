@@ -50,12 +50,31 @@ const TasksList: React.FC<TasksListProps> = ({ initialTasks }) => {
   const completedTasks = filteredTasks.filter((task) => task.completed)
   const incompleteTasks = filteredTasks.filter((task) => !task.completed)
 
-  const handleComplete = (taskId: string | number) => {
-    setTasks((tasks) =>
-      tasks.map((task) =>
-        task.id === taskId ? { ...task, completed: !task.completed } : task,
-      ),
-    )
+  const handleComplete = async (taskId: string | number) => {
+    try {
+      const indexUpdateTask = tasks.findIndex((task) => task.id === taskId)
+      const updatedTask = {
+        ...tasks[indexUpdateTask],
+        completed: !tasks[indexUpdateTask].completed,
+      }
+      await taskApi.updateTask(taskId, updatedTask)
+      setTasks((tasks) =>
+        tasks.map((task) =>
+          task.id === taskId ? { ...task, completed: !task.completed } : task,
+        ),
+      )
+    } catch (error) {
+      toast.error('Failed to update task, please try again', {
+        position: 'top-center',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      })
+    }
   }
 
   const handleOpenCreateTask = () => {
