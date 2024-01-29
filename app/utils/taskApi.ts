@@ -110,7 +110,7 @@ export const updateTask = async (
   return updatedTaskData as Task
 }
 
-export const deleteTask = async (id: number): Promise<void> => {
+export const deleteTask = async (id: string | number): Promise<void> => {
   const response = await fetch(getTaskIdUrl(id), {
     method: 'DELETE',
   })

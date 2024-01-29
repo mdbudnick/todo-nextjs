@@ -127,7 +127,21 @@ const TasksList: React.FC<TasksListProps> = ({ initialTasks }) => {
   }
 
   const handleDelete = async (taskId: string | number) => {
-    setTasks((tasks) => tasks.filter((task) => task.id !== taskId))
+    try {
+      await taskApi.deleteTask(taskId)
+      setTasks((tasks) => tasks.filter((task) => task.id !== taskId))
+    } catch {
+      toast.error('Failed to delete task, please try again', {
+        position: 'top-center',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      })
+    }
   }
 
   return (
