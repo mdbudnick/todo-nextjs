@@ -23,16 +23,10 @@ const TasksList: React.FC<TasksListProps> = ({ initialTasks }) => {
         const data = await taskApi.fetchPaginatedTasks()
         setTasks(data.tasks)
       } catch (error) {
-        toast.error('Failed to fetch tasks', {
-          position: 'top-center',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-        })
+        toast.error(
+          'There was a problem fetching your tasks, please try refreshing the page',
+          DEFAULT_ERROR_OPTIONS,
+        )
       }
     }
     if (isMounted) {
@@ -59,7 +53,7 @@ const TasksList: React.FC<TasksListProps> = ({ initialTasks }) => {
       )
     } catch (error) {
       toast.error(
-        'Failed to update task, please try again',
+        'There was a problem updating the task, please try again',
         DEFAULT_ERROR_OPTIONS,
       )
     }
@@ -88,7 +82,7 @@ const TasksList: React.FC<TasksListProps> = ({ initialTasks }) => {
       setTasks(() => [taskFromServer, ...tasks])
     } catch (error) {
       toast.error(
-        'Failed to create task, please try again',
+        'There was a problem creating the task, please try again',
         DEFAULT_ERROR_OPTIONS,
       )
     }
@@ -100,7 +94,7 @@ const TasksList: React.FC<TasksListProps> = ({ initialTasks }) => {
   ) => {
     const existingTask = tasks.find((task) => task.id === taskId)
     if (!existingTask) {
-      toast.error('Failed to find task to update', DEFAULT_ERROR_OPTIONS)
+      toast.error('We cannot find the task to update', DEFAULT_ERROR_OPTIONS)
       return
     }
     updateTask(taskId, { ...existingTask, ...updatedTask })
@@ -112,7 +106,7 @@ const TasksList: React.FC<TasksListProps> = ({ initialTasks }) => {
       setTasks((tasks) => tasks.filter((task) => task.id !== taskId))
     } catch {
       toast.error(
-        'Failed to delete task, please try again',
+        'There was a problem deleting the task, please try again',
         DEFAULT_ERROR_OPTIONS,
       )
     }
