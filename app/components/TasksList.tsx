@@ -48,17 +48,12 @@ const TasksList: React.FC<TasksListProps> = ({ initialTasks }) => {
   const completedTasks = filteredTasks.filter((task) => task.completed)
   const incompleteTasks = filteredTasks.filter((task) => !task.completed)
 
-  const handleComplete = async (taskId: string | number) => {
+  const updateTask = async (taskId: string | number, updatedTask: Task) => {
     try {
-      const indexUpdateTask = tasks.findIndex((task) => task.id === taskId)
-      const updatedTask = {
-        ...tasks[indexUpdateTask],
-        completed: !tasks[indexUpdateTask].completed,
-      }
       await taskApi.updateTask(taskId, updatedTask)
       setTasks((tasks) =>
         tasks.map((task) =>
-          task.id === taskId ? { ...task, completed: !task.completed } : task,
+          task.id === taskId ? { ...task, ...updatedTask } : task,
         ),
       )
     } catch (error) {
@@ -73,6 +68,15 @@ const TasksList: React.FC<TasksListProps> = ({ initialTasks }) => {
         theme: 'light',
       })
     }
+  }
+
+  const handleComplete = async (taskId: string | number) => {
+    const indexUpdateTask = tasks.findIndex((task) => task.id === taskId)
+    const updatedTask = {
+      ...tasks[indexUpdateTask],
+      completed: !tasks[indexUpdateTask].completed,
+    }
+    updateTask(taskId, updatedTask)
   }
 
   const handleOpenCreateTask = () => {
@@ -101,18 +105,28 @@ const TasksList: React.FC<TasksListProps> = ({ initialTasks }) => {
     }
   }
 
-  const handleUpdate = (
+  const handleUpdate = async (
     taskId: string | number,
     updatedTask: Partial<Task>,
   ) => {
-    setTasks((tasks) =>
-      tasks.map((task) =>
-        task.id === taskId ? { ...task, ...updatedTask } : task,
-      ),
-    )
+    const existingTask = tasks.find((task) => task.id === taskId)
+    if (!existingTask) {
+      toast.error('Failed to find task to update', {
+        position: 'top-center',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      })
+      return
+    }
+    updateTask(taskId, { ...existingTask, ...updatedTask })
   }
 
-  const handleDelete = (taskId: string | number) => {
+  const handleDelete = async (taskId: string | number) => {
     setTasks((tasks) => tasks.filter((task) => task.id !== taskId))
   }
 
