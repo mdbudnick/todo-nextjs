@@ -1,3 +1,5 @@
+import Task from '@/app/models/Task'
+
 export const INCOMPLETE_TASK: Task = {
   id: 100,
   title: 'Test Task',
