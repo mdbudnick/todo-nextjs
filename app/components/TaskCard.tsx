@@ -8,7 +8,7 @@ interface TaskCardProps {
   task: Task
   onComplete: (taskId: string | number) => void
   onUpdate: (taskId: string | number, updatedTask: Partial<Task>) => void
-  onDelete: (taskId: string) => void
+  onDelete: (taskId: string | number) => void
 }
 
 const TaskCard: React.FC<TaskCardProps> = ({
