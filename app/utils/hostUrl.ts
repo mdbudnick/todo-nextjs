@@ -1,7 +1,7 @@
 let constructApiUrl = ''
 
 if (process.env.TASKS_API_HOST) {
-  constructApiUrl = `http://${process.env.TASKS_API_HOST}`
+  constructApiUrl = `https://${process.env.TASKS_API_HOST}`
 
   constructApiUrl += process.env.TASKS_API_PORT
     ? `:${process.env.TASKS_API_PORT}`
@@ -9,7 +9,7 @@ if (process.env.TASKS_API_HOST) {
 } else {
   // Use parentheses to ensure correct order of operations
   constructApiUrl =
-    'http://localhost' +
+    'https://localhost' +
     (process.env.TASKS_API_PORT ? `:${process.env.TASKS_API_PORT}` : ':3001')
 }
 
